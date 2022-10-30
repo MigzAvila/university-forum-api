@@ -13,6 +13,7 @@ import (
 
 	_ "github.com/lib/pq"
 	"universityforum.miguelavila.net/internals/data"
+	"universityforum.miguelavila.net/internals/jsonlog"
 )
 
 // App Version
@@ -33,7 +34,7 @@ type config struct {
 // dependencies injections
 type application struct {
 	config config
-	logger *log.Logger
+	logger *jsonlog.Logger
 	models data.Models
 }
 
@@ -49,18 +50,18 @@ func main() {
 	flag.Parse()
 
 	//create a logger ~ use := for undeclared var
-	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
 	//create the connection pool
 	db, err := openDB(cfg)
 	if err != nil {
-		logger.Fatal(err)
+		logger.PrintFatal(err, nil)
 	}
 	// memory leak prevent
 	defer db.Close()
 
 	// log successful connection
-	logger.Printf("database connection pool established")
+	logger.PrintInfo("database connection pool established", nil)
 
 	//create instances of out api
 	app := &application{
@@ -73,15 +74,19 @@ func main() {
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.port),
 		Handler:      app.routes(),
+		ErrorLog:     log.New(logger, "", 0),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
 	}
 
-	logger.Printf("Starting %s server at %s", cfg.env, srv.Addr)
+	logger.PrintInfo("Starting server", map[string]string{
+		"addr": srv.Addr,
+		"env":  cfg.env,
+	})
 	//start the server
 	err = srv.ListenAndServe()
-	logger.Fatal(err)
+	logger.PrintError(err, nil)
 
 }
 

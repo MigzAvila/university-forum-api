@@ -8,5 +8,5 @@ import (
 
 func (app *application) dummy(w http.ResponseWriter, r *http.Request) {
 
-	app.logger.Println("dummy function...")
+	app.logger.PrintInfo("dummy function...", nil)
 }

@@ -8,5 +8,5 @@ import (
 
 func (app *application) signupUserHandler(w http.ResponseWriter, r *http.Request) {
 
-	app.logger.Println("Creating user...")
+	app.logger.PrintInfo("Creating user...", nil)
 }
