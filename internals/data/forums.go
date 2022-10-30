@@ -19,14 +19,3 @@ type Forum struct {
 type ForumModel struct {
 	DB *sql.DB
 }
-
-type User struct {
-	ID             int       `json:"id"`
-	Name           string    `json:"name"`
-	Email          string    `json:"email"`
-	HashedPassword []byte    `json:"hashed_password"`
-	CreatedAt      time.Time `json:"-"`
-	Active         bool      `json:"active"`
-}
-
-// func
