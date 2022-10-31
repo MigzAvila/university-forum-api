@@ -1,2 +1,2 @@
--- User table that will contain registered users
+ -- filename migrations/000001_add_user_table.down.sql
 DROP TABLE IF EXISTS users;
