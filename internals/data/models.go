@@ -8,10 +8,8 @@ import (
 )
 
 var (
-	ErrRecordNotFound     = errors.New("record not found")
-	ErrEditConflict       = errors.New("edit conflict")
-	ErrInvalidCredentials = errors.New("invalid credentials")
-	ErrDuplicateEmail     = errors.New("duplicate email address")
+	ErrRecordNotFound = errors.New("record not found")
+	ErrEditConflict   = errors.New("edit conflict")
 )
 
 // A wrapper for out data models
