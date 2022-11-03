@@ -14,7 +14,7 @@ func (app *application) routes() http.Handler {
 	router.NotFound = http.HandlerFunc(app.notFoundResponse)
 	router.MethodNotAllowed = http.HandlerFunc(app.MethodNotAllowedReponse)
 	router.HandlerFunc(http.MethodGet, "/v1/healthcheck", app.healthcheckHandler)
-	router.HandlerFunc(http.MethodPost, "/v1/user/signup", app.signupUserHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/user", app.registerUserHandler)
 
 	return app.recoverPanic(app.rateLimit(router))
 }

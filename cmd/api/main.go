@@ -11,6 +11,7 @@ import (
 	_ "github.com/lib/pq"
 	"universityforum.miguelavila.net/internals/data"
 	"universityforum.miguelavila.net/internals/jsonlog"
+	"universityforum.miguelavila.net/internals/mailer"
 )
 
 // App Version
@@ -31,6 +32,13 @@ type config struct {
 		burst  int
 		enable bool
 	}
+	stmp struct {
+		host     string
+		port     int
+		username string
+		password string
+		sender   string
+	}
 }
 
 // dependencies injections
@@ -38,6 +46,7 @@ type application struct {
 	config config
 	logger *jsonlog.Logger
 	models data.Models
+	mailer mailer.Mailer
 }
 
 func main() {
@@ -51,9 +60,16 @@ func main() {
 	flag.StringVar(&cfg.db.maxIdleTime, "db-max-idle-open-time", "15m", "PostgreSQL max connections idle time")
 
 	// Flag for rate limiter
-	flag.Float64Var(&cfg.limiter.rps, "limiter-rps", 2, "Rate limiter maximum request per second")
-	flag.IntVar(&cfg.limiter.burst, "limiter-burst", 4, "Rate limiter maximum burst")
-	flag.BoolVar(&cfg.limiter.enable, "limiter-enable", true, "Enable Rate Limiter")
+	flag.Float64Var(&cfg.limiter.rps, "limiter-rps", 10, "Rate limiter maximum request per second")
+	flag.IntVar(&cfg.limiter.burst, "limiter-burst", 20, "Rate limiter maximum burst")
+	flag.BoolVar(&cfg.limiter.enable, "limiter-enable", false, "Enable Rate Limiter")
+
+	// Flag for stmp server
+	flag.StringVar(&cfg.stmp.host, "smtp-host", "smtp.mailtrap.io", "STMP server host")
+	flag.IntVar(&cfg.stmp.port, "stmp-port", 2525, "STMP server port")
+	flag.StringVar(&cfg.stmp.username, "stmp-username", os.Getenv("STMP_USERNAME"), "STMP server username")
+	flag.StringVar(&cfg.stmp.password, "stmp-password", os.Getenv("STMP_PASSWORD"), "STMP server password")
+	flag.StringVar(&cfg.stmp.sender, "stmp-sender", "GobalUniversiryForum <no-reply@universityforum.forums.net>", "STMP server sender")
 
 	flag.Parse()
 
@@ -76,6 +92,7 @@ func main() {
 		config: cfg,
 		logger: logger,
 		models: *data.NewModels(db),
+		mailer: mailer.New(cfg.stmp.host, cfg.stmp.port, cfg.stmp.username, cfg.stmp.password, cfg.stmp.sender),
 	}
 
 	// Call app.serve() to start the server
