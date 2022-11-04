@@ -16,6 +16,7 @@ var (
 type Models struct {
 	Forum ForumModel
 	User  UserModel
+	Token TokenModel
 }
 
 // NewModels() allows us to create new models
@@ -23,5 +24,6 @@ func NewModels(db *sql.DB) *Models {
 	return &Models{
 		Forum: ForumModel{DB: db},
 		User:  UserModel{DB: db},
+		Token: TokenModel{DB: db},
 	}
 }
