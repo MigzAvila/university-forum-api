@@ -48,8 +48,16 @@ func (app *application) serve() error {
 		defer cancel()
 
 		//call shutdown function
-		shutdownError <- srv.Shutdown(ctx)
-
+		err := srv.Shutdown(ctx)
+		if err != nil {
+			shutdownError <- err
+		}
+		// Log message about the goroutines
+		app.logger.PrintInfo("completing background tasks", map[string]string{
+			"addr": srv.Addr,
+		})
+		app.wg.Wait()
+		shutdownError <- nil
 	}()
 	// start our server
 	app.logger.PrintInfo("Starting server", map[string]string{
