@@ -6,7 +6,6 @@ import (
 	"net/http"
 )
 
-func (app *application) dummy(w http.ResponseWriter, r *http.Request) {
-
+func (app *application) getForumHandler(w http.ResponseWriter, r *http.Request) {
 	app.logger.PrintInfo("dummy function...", nil)
 }

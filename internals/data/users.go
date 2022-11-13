@@ -16,14 +16,22 @@ var (
 	ErrDuplicateEmail     = errors.New("duplicate email address")
 )
 
+// Declare an AnonymousUser, no id, no name, no password, no email
+var AnonymousUser = &User{}
+
 type User struct {
 	ID        int64     `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"create_at"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Password  password  `json:"-"`
 	Activated bool      `json:"activated"`
 	Version   int64     `json:"-"`
+}
+
+// check if a user is anonymous
+func (u *User) IsAnonymous() bool {
+	return u == AnonymousUser
 }
 
 // create a custom password type
@@ -132,7 +140,7 @@ func (m *UserModel) Insert(user *User) error {
 // Get user based on their email
 func (m UserModel) GetByEmail(email string) (*User, error) {
 	query := `
-		SELECT id, created_at, name, email, password_hash, version
+		SELECT id, create_at, name, email, password_hash, version
 		FROM users
 		WHERE email = $1
 	`
@@ -146,7 +154,6 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 		&user.Name,
 		&user.Email,
 		&user.Password.hash,
-		&user.Activated,
 		&user.Version,
 	)
 
