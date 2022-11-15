@@ -4,7 +4,7 @@ set -g -x BODY '{"name": "Miguel Avila" , "email":"migz@example.com", "password"
 curl -d "$BODY" localhost:4000/v1/users   
 
 activate acc
-set -g -x BODY  '{"token": "CIWMQAPE4HVFPJCFPKWMMGDRY4"}'
+set -g -x BODY  '{"token": "NCLBOVD5MHOCRPMEQHBJOGECDI"}'
 curl -X PUT -d "$BODY" localhost:4000/v1/user/activate
 
 generate token for endpoints
@@ -12,7 +12,7 @@ set -g -x BODY '{"email":"migz@example.com", "password":"testpass"}'
 curl -i -d  "$BODY" localhost:4000/v1/tokens/authentication
 
 create forums
-set -g -x TOKEN '1232435'
+set -g -x TOKEN 'IVJZAXBIPYSCM6OKZZT7JWEGXM'
 set -g -x BODY '{"title":"UB experience in the IT", "description":"The IT programs is one of the best programs UB offers"}' 
 curl -X POST -H "Authorization: Bearer $TOKEN" -d  "$BODY" localhost:4000/v1/forums
 
@@ -31,3 +31,4 @@ curl -X PATCH -H "Authorization: Bearer $TOKEN" -d "$BODY" localhost:4000/v1/for
 
 set -g -x BODY '{"title":"UB experience in the IT updated", "description":"The IT programs is one of the best programs UB offers Partial Update"}'
 curl -X PATCH -H "Authorization: Bearer $TOKEN" -d "$BODY" localhost:4000/v1/forums/5
+
