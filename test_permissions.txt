@@ -1,0 +1,11 @@
+generate token for endpoints
+set -g -x BODY '{"email":"migz@example.com", "password":"testpass"}'
+curl -i -d  "$BODY" localhost:4000/v1/tokens/authentication  -- ZOAZGJSX4X3UVHWLTQ6ZWEAOSM
+set -g -x TOKEN 'ZOAZGJSX4X3UVHWLTQ6ZWEAOSM'
+
+John Doe --- only write 
+set -g -x BODY '{"email":"johndoe@example.com", "password":"forumpassword"}'
+curl -i -d  "$BODY" localhost:4000/v1/tokens/authentication  -- TBDZFHUFL6KSSKXGAQ3OTAOJME
+
+set -g -x TOKEN 'TBDZFHUFL6KSSKXGAQ3OTAOJME'
+

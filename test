@@ -1,0 +1,100 @@
+#  syntax=docker/dockerfile:1
+FROM golang:1.16-alpine 
+
+WORKDIR /backend
+
+COPY . /backend
+COPY . ./
+RUN go mod download
+
+WORKDIR /backend/cmd/api
+
+RUN go build -o /api-backend
+
+CMD ["go", "run", "/api-backend/cmd/api"]
+
+
+
+
+# # syntax=docker/dockerfile:1.4
+# FROM --platform=$BUILDPLATFORM golang:1.18-alpine AS builder
+
+# WORKDIR /backend
+
+# ENV CGO_ENABLED 0
+# ENV GOPATH /go
+# ENV GOCACHE /go-build
+
+# COPY go.mod go.sum ./
+# RUN --mount=type=cache,target=/go/pkg/mod/cache \
+#     go mod download
+
+# COPY . .
+
+
+# RUN --mount=type=cache,target=/go/pkg/mod/cache \
+#     --mount=type=cache,target=/go-build \
+#     go build -o bin/cmd/api/ ./cmd/api/main.go
+
+# CMD ["/backend/bin/cmd/api/"]
+
+# FROM builder as dev-envs
+
+
+# # install Docker tools (cli, buildx, compose)
+# COPY --from=gloursdocker/docker / /
+
+# CMD ["go", "run", "/cmd/api/cmd/api/"]
+
+# FROM scratch
+# COPY --from=builder /backend/bin/backend /usr/local/bin/backend
+# CMD ["/usr/local/bin/cmd/api/"]
+
+
+
+
+
+
+
+
+
+
+
+#   proxy:
+#     image: nginx
+#     volumes:
+#       - type: bind
+#         source: ./proxy/nginx.conf
+#         target: /etc/nginx/conf.d/default.conf
+#         read_only: true
+#     ports:
+#       - 80:80
+#     depends_on:
+#       - backend
+
+
+
+
+# syntax=docker/dockerfile:1.4
+FROM --platform=$BUILDPLATFORM golang:1.18-alpine AS builder
+
+WORKDIR /backend
+
+COPY . /backend
+COPY . ./
+RUN go mod download
+
+RUN go build -o /cmd/api /api-backend
+
+CMD ["/backend/api-backend/cmd/api"]
+
+FROM builder as dev-envs
+
+
+COPY --from=gloursdocker/docker / /
+
+CMD ["go", "run", "/backend/api-backend/cmd/api/main.go", "--port=8000"]
+
+FROM scratch
+COPY --from=builder /backend/api-backend /usr/local/bin/api-backend/
+CMD ["/usr/local/bin/api-backend"]

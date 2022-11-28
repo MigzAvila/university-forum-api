@@ -1,15 +1,19 @@
 
 Create acc
-set -g -x BODY '{"email":"jencast@example.com", "password":"testpass"}'   
+set -g -x BODY '{"name":"Manuel Avila", "email":"manuel@example.com", "password":"testpass"}'   
 curl -d "$BODY" localhost:4000/v1/users   
 
 activate acc
-set -g -x BODY  '{"token": "N6326AYFVHN4JHZIIPVGGZBI3Q"}'
-curl -X PUT -d "$BODY" localhost:4000/v1/user/activate
+set -g -x BODY  '{"token": "QCWUPSWXIV2ZVC3MJUI6FL4L3U"}'
+curl -X PUT -d "$BODY" localhost:4000/v1/users/activate
 
 generate token for endpoints
 set -g -x BODY '{"email":"migz@example.com", "password":"testpass"}'
-curl -i -d  "$BODY" localhost:4000/v1/tokens/authentication
+curl -i -d  "$BODY" localhost:4000/v1/tokens/authentication  -- ZOAZGJSX4X3UVHWLTQ6ZWEAOSM
+
+set -g -x BODY '{"email":"johndoe@example.com", "password":"forumpassword"}'
+curl -i -d  "$BODY" localhost:4000/v1/tokens/authentication  -- TBDZFHUFL6KSSKXGAQ3OTAOJME
+
 
 create forums
 set -g -x TOKEN 'A5HXQWIWESUKEYQVW7QEDMMCW4'

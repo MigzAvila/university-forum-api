@@ -87,7 +87,7 @@ func main() {
 	defer db.Close()
 
 	// log successful connection
-	logger.PrintInfo("database connection pool established", nil)
+	logger.PrintInfo("database connection pool established edited", nil)
 
 	//create instances of out api
 	app := &application{
