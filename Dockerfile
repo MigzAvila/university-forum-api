@@ -1,4 +1,5 @@
 #  syntax=docker/dockerfile:1
+
 # Fetch the base image
 FROM golang:1.16-alpine 
 
@@ -18,4 +19,4 @@ RUN go build -o /api-backend ./cmd/api
 EXPOSE 4000
 
 # run the project
-CMD [ "/api-backend", "--port=4000"]
+CMD [ "/api-backend", "--port=4000" ]

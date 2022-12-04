@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"flag"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -40,6 +41,9 @@ type config struct {
 		password string
 		sender   string
 	}
+	cors struct {
+		trustedOrigin []string
+	}
 }
 
 // dependencies injections
@@ -72,6 +76,12 @@ func main() {
 	flag.StringVar(&cfg.stmp.username, "stmp-username", os.Getenv("STMP_USERNAME"), "STMP server username")
 	flag.StringVar(&cfg.stmp.password, "stmp-password", os.Getenv("STMP_PASSWORD"), "STMP server password")
 	flag.StringVar(&cfg.stmp.sender, "stmp-sender", "GobalUniversiryForum <no-reply@universityforum.forums.net>", "STMP server sender")
+
+	// use flag.Func() function to parse our trusted Origins flags from
+	flag.Func("cors-trusted-origins", "Trusted CORS origin (space separated)", func(val string) error {
+		cfg.cors.trustedOrigin = strings.Fields(val)
+		return nil
+	})
 
 	flag.Parse()
 
